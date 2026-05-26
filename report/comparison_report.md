@@ -11,17 +11,13 @@
 > MQTT rows: `pytest tests/mqtt/test_qos_loss.py -v -s` via a lossy proxy (10% QoS-0 drop rate, loopback).
 > CoAP rows: `python3 scripts/coap_experiment.py` with 10% simulated NON loss (N=100 requests each).
 
-========================================================================
-      QoS Comparison Results (Target: 100 msgs, ~10% loss)
-========================================================================
-QoS          Sent   Received     Lost    Loss%    Dupes    Avg Lat(ms)
-------------------------------------------------------------------------
-QoS 0         100         92        8     8.0%        0           2.3
-QoS 1         100        100        0     0.0%        0           2.6
-QoS 2         100        100        0     0.0%        0           5.7
-CoAP NON      100         90       10     10.0%       0           1.7
-CoAP CON      100        100       0      0.0%        0           1.9
-========================================================================
+| Protocol / QoS | Sent | Received | Lost | Loss% | Dupes | Avg Lat (ms) |
+|:---|---:|---:|---:|---:|---:|---:|
+| QoS 0 | 100 | 92 | 8 | 8.0% | 0 | 2.3 |
+| QoS 1 | 100 | 100 | 0 | 0.0% | 0 | 2.6 |
+| QoS 2 | 100 | 100 | 0 | 0.0% | 0 | 5.7 |
+| CoAP NON | 100 | 90 | 10 | 10.0% | 0 | 1.7 |
+| CoAP CON | 100 | 100 | 0 | 0.0% | 0 | 1.9 |
 
 
 
@@ -53,16 +49,12 @@ CoAP CON      100        100       0      0.0%        0           1.9
 
 > Results from running `pytest tests/coap/test_proxy.py -v -s` with the aiocoap built-in forward proxy.
 
-=================================================================
-  Section 5.2 — CoAP-HTTP Proxy Mapping Table
-=================================================================
-HTTP Header                  CoAP Option            Observed Value
------------------------------------------------------------------
-  Content-Type               Option 12 (Content-Format) application/json
-  Cache-Control: max-age     Option 14 (Max-Age)    max-age=60
-  ETag                       Option 4  (ETag)       "a3f8d21c"
-  Location                   Option 8  (Location-Path) /factory/line1/temperature
-=================================================================
+| HTTP Header | CoAP Option | Observed Value |
+|:---|:---|:---|
+| Content-Type | Option 12 (Content-Format) | application/json |
+| Cache-Control: max-age | Option 14 (Max-Age) | max-age=60 |
+| ETag | Option 4 (ETag) | "a3f8d21c" |
+| Location | Option 8 (Location-Path) | /factory/line1/temperature |
 
 **Mapping explanation:** The CoAP-HTTP proxy performs a semantic translation between the two protocol namespaces. CoAP **Content-Format** (option number 12) carries a numeric code that identifies the payload type; code **50** means `application/json`, which the proxy translates to the HTTP `Content-Type: application/json` header. The CoAP **Max-Age** option (option 14) specifies how many seconds a resource representation remains fresh for caching; the proxy maps this directly to the HTTP `Cache-Control: max-age=60` header, preserving the same TTL value. CoAP **ETag** (option 4) is a short binary opaque identifier used for conditional requests; the proxy hex-encodes the raw bytes and places the result in the HTTP `ETag` header (e.g. `"a3f8d21c"`). Finally, the resource's URI path — carried as CoAP **Uri-Path** / **Location-Path** (option 8) — is reflected in the HTTP `Location` header so the HTTP client knows the canonical path of the resource it retrieved.
 
