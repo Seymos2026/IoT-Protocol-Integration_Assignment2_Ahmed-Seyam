@@ -45,7 +45,7 @@
 
 ---
 
-## 5.2 CoAP–HTTP Proxy Mapping (Evidence for this task as a video [Evidence Videos / Task 2.mp4])
+## 5.2 CoAP–HTTP Proxy Mapping (Evidence for this task as a screenshot [Screenshots_Evidences / Task 2_table 5_2.png]])
 
 > Results from running `pytest tests/coap/test_proxy.py -v -s` with the aiocoap built-in forward proxy.
 
